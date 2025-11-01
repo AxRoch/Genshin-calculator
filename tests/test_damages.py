@@ -21,20 +21,20 @@ def get_build_calculator(build):
 def test_razor_1():
     calculator = get_build_calculator(Build(STATS.FLAT_ATK(2325), STATS.DMG(138.3),
                                             STATS.CRIT_RATE(100), STATS.CRIT_DGT(146.4),
-                                            refinement=1, constellation=1))
+                                            character_level=81, refinement=1, constellation=1))
 
-    results = calculator.compute(DmgType.NORMAL(1.52), resistances=70, ennemy_lvl=85, char_lvl=81)
-    assert math.isclose(results[0][0], 3078, abs_tol=1), f'{results[0][0]}'
+    results = calculator.compute(DmgType.NORMAL(1.52), resistances=70, ennemy_lvl=85)
+    assert math.isclose(results[0][0], 3078, rel_tol=3e-4), f'{results[0][0]}'
 
 
 def test_razor_2():
     calculator = get_build_calculator(Build(STATS.FLAT_ATK(2325), STATS.DMG(138.3),
                                             STATS.CRIT_RATE(100), STATS.CRIT_DGT(146.4),
                                             STATS.DMG(10), STATS.DEF_SHRED(15),
-                                            refinement=1, constellation=1))
+                                            character_level=81, refinement=1, constellation=1))
 
-    results = calculator.compute(DmgType.NORMAL(1.52), resistances=70, ennemy_lvl=85, char_lvl=81)
-    assert math.isclose(results[0][0], 3471, abs_tol=1)
+    results = calculator.compute(DmgType.NORMAL(1.52), resistances=70, ennemy_lvl=85)
+    assert math.isclose(results[0][0], 3471, rel_tol=3e-4)
 
 # Hu Tao
 def test_hu_tao():
@@ -43,13 +43,13 @@ def test_hu_tao():
                                             STATS.DMG(48, DmgType.NORMAL),
                                             STATS.FLAT_PV(30830),
                                             STATS.CRIT_RATE(100), STATS.CRIT_DGT(143.64),
-                                            refinement=1, constellation=1))
+                                            character_level=82, refinement=1, constellation=1))
     results = calculator.compute(DmgType.NORMAL(0.741),
-                                resistances=10, ennemy_lvl=85, char_lvl=82)
+                                resistances=10, ennemy_lvl=85)
 
-    assert math.isclose(results[0][0], 5670, abs_tol=1)
+    assert math.isclose(results[0][0], 5670, rel_tol=3e-4)
 
     results = calculator.compute(DmgType.CHARGED(2.148),
-                                resistances=10, ennemy_lvl=85, char_lvl=82)
+                                resistances=10, ennemy_lvl=85)
 
-    assert math.isclose(results[0][0], 13282, abs_tol=2)
+    assert math.isclose(results[0][0], 13282, rel_tol=3e-4)

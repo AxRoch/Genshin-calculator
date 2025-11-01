@@ -62,7 +62,6 @@ class Calculator():
     def compute(self,
                 *actions: List[DmgType],
                 resistances: Union[float, Iterable[float]] = 0,
-                char_lvl: int = 90,
                 ennemy_lvl: int = 100,
                 reaction: Reaction = NO_REACTIONS):
         """Compute the total damage for all possible combinations of builds.
@@ -73,8 +72,6 @@ class Calculator():
             List of attack types performed by the character.
         resistances : Union[float, Iterable[float]], default 0
             Enemy resistance(s).
-        char_lvl : int, default 90
-            Character level.
         ennemy_lvl : int, default 100
             Enemy level.
         reaction : Reaction, optional
@@ -86,6 +83,7 @@ class Calculator():
             List of tuples containing total damage, selection names, and stats.
         """
         assert len(actions) > 0
+        char_lvl = self.character.character_level
 
         SELECTIONS_ORDER = ('team_bonuses', 'weapons', 'helmets',
                             'sands', 'cups', 'feathers', 'flowers')

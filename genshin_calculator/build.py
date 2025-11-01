@@ -22,12 +22,14 @@ class Build():
 
     def __init__(self,
                  *stats: Stat,
+                 character_level: int = 0,
                  refinement: int = 0,
                  constellation: int = 0,
                  name: Optional[str] = None):
         self._stats = list(stats)
         self._sets_count = {}
         self._artifacts_name = []
+        self.character_level = character_level
         self._refinement = refinement
         self._constellation = constellation
         self._weapon_name = ""
@@ -53,8 +55,8 @@ class Build():
         """
         if len(self._artifacts_name) > 5:
             raise ValueError("A character can't have more than 5 artifacts.")
-        if self._refinement == 0 or self._constellation == 0:
-            raise ValueError("Refinement and constellation values required"
+        if self._refinement == 0 or self._constellation == 0 or self.character_level == 0:
+            raise ValueError("Character level, refinement and constellation values required"
                              "to compute final statistics.")
         stats_dict = {STATS.REFINEMENT: self._refinement, STATS.CONSTELLATION: self._constellation,
                       STATS.ATK: STATS.FLAT_ATK + STATS.ATK_PERC * STATS.BASE_ATK / 100,
@@ -108,6 +110,13 @@ class Build():
                 new_build._weapon_name = self._weapon_name
             elif other._weapon_name:
                 new_build._weapon_name = other._weapon_name
+            
+            if self.character_level:
+                if other.character_level:
+                    raise ValueError("Can't add two characters.")
+                new_build.character_level = self.character_level
+            elif other.character_level:
+                new_build.character_level = other.character_level
             
             
             new_build._artifacts_name = self._artifacts_name + other._artifacts_name
