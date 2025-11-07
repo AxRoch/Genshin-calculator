@@ -53,3 +53,17 @@ def test_hu_tao():
                                 resistances=10, ennemy_lvl=85)
 
     assert math.isclose(results[0][0], 13282, rel_tol=3e-4)
+
+
+def test_rosaria():
+    calculator = get_build_calculator(Build(STATS.ATK(1420),
+                                            STATS.FLAT_DMG(0.2 * STATS.ATK),
+                                            STATS.DMG(86.7),
+                                            STATS.CRIT_RATE(100), STATS.CRIT_DGT(107.5),
+                                            character_level=81, refinement=1, constellation=1))
+    
+    results = calculator.compute(DmgType.NORMAL(0.),
+                                resistances=70, ennemy_lvl=85)
+    
+    print(results[0][0])
+    assert math.isclose(results[0][0], 163, rel_tol=5e-3)

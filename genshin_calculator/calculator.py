@@ -101,7 +101,6 @@ class Calculator():
             for current_dmg_type in sum(actions, start=Rotation()):
                 stats = build.compute(current_dmg_type)
 
-                additive = 0 # TODO (EG via class CA_STATS(STATS))
                 base_dmg_multiplier = 1
                 
                 res_shred = stats[STATS.DEF_SHRED] / 100
@@ -110,9 +109,9 @@ class Calculator():
                 base_dmg = current_dmg_type.atk_mult * stats[STATS.ATK]
                 base_dmg += current_dmg_type.pv_mult * stats[STATS.PV]
                 base_dmg += current_dmg_type.def_mult * stats[STATS.DEF]
-                base_dmg = base_dmg * base_dmg_multiplier + additive
+                base_dmg = base_dmg * base_dmg_multiplier + stats[STATS.FLAT_DMG]
+                
                 dmg_bonus = 100 + stats[STATS.DMG]
-
                 res_mult = get_res_mult(resistances, stats[STATS.RES_SHRED])
                 dmg = defense_mult * base_dmg * dmg_bonus / 100
 
