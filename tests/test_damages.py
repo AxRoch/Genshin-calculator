@@ -2,6 +2,7 @@ import math
 
 from genshin_calculator.build import Build
 from genshin_calculator.calculator import Calculator
+from genshin_calculator.reactions import REVERSE_MELT
 from genshin_calculator.stats import STATS, DmgType
 
 # Examples taken from https://www.youtube.com/watch?v=ai1JgPe1ue4&list=WL&index=45
@@ -20,7 +21,7 @@ def get_build_calculator(build):
 
 def test_razor_1():
     calculator = get_build_calculator(Build(STATS.FLAT_ATK(2325), STATS.DMG(138.3),
-                                            STATS.CRIT_RATE(100), STATS.CRIT_DGT(146.4),
+                                            STATS.CRIT_RATE(100), STATS.CRIT_DMG(146.4),
                                             character_level=81, refinement=1, constellation=1))
 
     results = calculator.compute(DmgType.NORMAL(1.52), resistances=70, ennemy_lvl=85)[0][0]
@@ -29,7 +30,7 @@ def test_razor_1():
 
 def test_razor_2():
     calculator = get_build_calculator(Build(STATS.FLAT_ATK(2325), STATS.DMG(138.3),
-                                            STATS.CRIT_RATE(100), STATS.CRIT_DGT(146.4),
+                                            STATS.CRIT_RATE(100), STATS.CRIT_DMG(146.4),
                                             STATS.DMG(10), STATS.DEF_SHRED(15),
                                             character_level=81, refinement=1, constellation=1))
 
@@ -42,7 +43,7 @@ def test_hu_tao():
                                             STATS.DMG(61.6 + 33 + 7.5),
                                             STATS.DMG(48, DmgType.NORMAL),
                                             STATS.FLAT_HP(30830),
-                                            STATS.CRIT_RATE(100), STATS.CRIT_DGT(143.64),
+                                            STATS.CRIT_RATE(100), STATS.CRIT_DMG(143.64),
                                             character_level=82, refinement=1, constellation=1))
     results = calculator.compute(DmgType.NORMAL(0.741),
                                 resistances=10, ennemy_lvl=85)[0][0]
@@ -59,7 +60,7 @@ def test_rosaria():
     calculator = get_build_calculator(Build(STATS.ATK(1420),
                                             STATS.FLAT_DMG(0.2 * STATS.ATK),
                                             STATS.DMG(86.7),
-                                            STATS.CRIT_RATE(100), STATS.CRIT_DGT(107.5),
+                                            STATS.CRIT_RATE(100), STATS.CRIT_DMG(107.5),
                                             character_level=81, refinement=1, constellation=1))
     
     results = calculator.compute(DmgType.NORMAL(0.),
@@ -83,3 +84,18 @@ def test_kokomi():
                                 resistances=10, ennemy_lvl=85)[0][0]
     
     assert math.isclose(results, 5707, rel_tol=5e-3)
+
+
+def test_chongyun():
+    calculator = get_build_calculator(Build(STATS.ATK(1707),
+                                            STATS.EM(54),
+                                            STATS.FLAT_DMG(0.077 * STATS.HP, DmgType.NORMAL),
+                                            STATS.FLAT_DMG(0.15 * STATS.HEALING_BONUS * STATS.HP / 100,
+                                                           DmgType.NORMAL | DmgType.CHARGED),
+                                            STATS.DMG(61.6), STATS.DMG(30),
+                                            STATS.HEALING_BONUS(75.9),
+                                            STATS.CRIT_RATE(100), STATS.CRIT_DMG(163.5),
+                                            character_level=81, refinement=1, constellation=1))
+    
+    results = calculator.compute(DmgType.NORMAL(3.27), resistances=10, ennemy_lvl=85, reaction=REVERSE_MELT)[0][0]
+    assert math.isclose(results, 20752, rel_tol=5e-3)

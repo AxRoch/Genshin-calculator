@@ -116,7 +116,7 @@ class Calculator():
                 dmg = defense_mult * base_dmg * dmg_bonus / 100
 
                 crit_rate = min(100, stats[STATS.CRIT_RATE]) / 100
-                final_dmg = (1 + crit_rate * stats[STATS.CRIT_DGT] / 100) * dmg
+                final_dmg = (1 + crit_rate * stats[STATS.CRIT_DMG] / 100) * dmg
 
                 reaction_bonus = 0 # TODO
                 final_dmg = res_mult * reaction(final_dmg, stats[STATS.EM], reaction_bonus)
