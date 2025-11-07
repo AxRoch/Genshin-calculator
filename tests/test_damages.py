@@ -38,10 +38,10 @@ def test_razor_2():
 
 # Hu Tao
 def test_hu_tao():
-    calculator = get_build_calculator(Build(STATS.FLAT_ATK(1069 + 0.0566 * STATS.FLAT_PV),
+    calculator = get_build_calculator(Build(STATS.FLAT_ATK(1069 + 0.0566 * STATS.FLAT_HP),
                                             STATS.DMG(61.6 + 33 + 7.5),
                                             STATS.DMG(48, DmgType.NORMAL),
-                                            STATS.FLAT_PV(30830),
+                                            STATS.FLAT_HP(30830),
                                             STATS.CRIT_RATE(100), STATS.CRIT_DGT(143.64),
                                             character_level=82, refinement=1, constellation=1))
     results = calculator.compute(DmgType.NORMAL(0.741),
@@ -70,9 +70,9 @@ def test_rosaria():
 
 def test_kokomi():
     calculator = get_build_calculator(Build(STATS.ATK(1333),
-                                            STATS.PV(30668),
-                                            STATS.FLAT_DMG(0.077 * STATS.PV, DmgType.NORMAL),
-                                            STATS.FLAT_DMG(0.15 * STATS.HEALING_BONUS * STATS.PV / 100,
+                                            STATS.HP(30668),
+                                            STATS.FLAT_DMG(0.077 * STATS.HP, DmgType.NORMAL),
+                                            STATS.FLAT_DMG(0.15 * STATS.HEALING_BONUS * STATS.HP / 100,
                                                            DmgType.NORMAL | DmgType.CHARGED),
                                             STATS.DMG(75.4),
                                             STATS.HEALING_BONUS(75.9),

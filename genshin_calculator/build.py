@@ -60,7 +60,7 @@ class Build():
                              "to compute final statistics.")
         stats_dict = {STATS.REFINEMENT: self._refinement, STATS.CONSTELLATION: self._constellation,
                       STATS.ATK: STATS.FLAT_ATK + STATS.ATK_PERC * STATS.BASE_ATK / 100,
-                      STATS.PV: STATS.FLAT_PV + STATS.PV_PERC * STATS.BASE_PV / 100,
+                      STATS.HP: STATS.FLAT_HP + STATS.HP_PERC * STATS.BASE_HP / 100,
                       STATS.DEF: STATS.FLAT_DEF + STATS.DEF_PERC * STATS.BASE_DEF / 100}
         stats_dict = defaultdict(int, stats_dict)
         for stat in self._stats:

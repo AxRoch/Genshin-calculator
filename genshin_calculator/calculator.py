@@ -107,7 +107,7 @@ class Calculator():
                 defense_mult = (100 + char_lvl) / ( (1 - res_shred) * (100 + ennemy_lvl) + (100 + char_lvl) )
                 
                 base_dmg = current_dmg_type.atk_mult * stats[STATS.ATK]
-                base_dmg += current_dmg_type.pv_mult * stats[STATS.PV]
+                base_dmg += current_dmg_type.pv_mult * stats[STATS.HP]
                 base_dmg += current_dmg_type.def_mult * stats[STATS.DEF]
                 base_dmg = base_dmg * base_dmg_multiplier + stats[STATS.FLAT_DMG]
                 

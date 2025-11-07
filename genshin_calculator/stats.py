@@ -256,10 +256,10 @@ class STATS(Enum):
     FLAT_ATK = auto()
     ATK_PERC = auto()
 
-    PV = auto()
-    BASE_PV = auto()
-    PV_PERC = auto()
-    FLAT_PV = auto()
+    HP = auto()
+    BASE_HP = auto()
+    HP_PERC = auto()
+    FLAT_HP = auto()
 
     DEF = auto()
     BASE_DEF = auto()
