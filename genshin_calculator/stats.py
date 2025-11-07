@@ -280,6 +280,8 @@ class STATS(Enum):
 
     RES_SHRED = auto()
     DEF_SHRED = auto()
+
+    HEALING_BONUS = auto()
     
     CONSTELLATION = auto()
     REFINEMENT = auto()
