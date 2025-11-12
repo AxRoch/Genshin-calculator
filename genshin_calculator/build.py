@@ -59,26 +59,23 @@ class Build():
             raise ValueError("Character level, refinement and constellation values required"
                              "to compute final statistics.")
         stats_dict = {STATS.REFINEMENT: self._refinement, STATS.CONSTELLATION: self._constellation,
-                      STATS.ATK: STATS.FLAT_ATK + STATS.ATK_PERC * STATS.BASE_ATK / 100,
-                      STATS.HP: STATS.FLAT_HP + STATS.HP_PERC * STATS.BASE_HP / 100,
-                      STATS.DEF: STATS.FLAT_DEF + STATS.DEF_PERC * STATS.BASE_DEF / 100}
+                      STATS.ATK: STATS.FLAT_ATK + STATS.BASE_ATK + STATS.ATK_PERC * STATS.BASE_ATK / 100,
+                      STATS.HP: STATS.FLAT_HP + STATS.BASE_HP + STATS.HP_PERC * STATS.BASE_HP / 100,
+                      STATS.DEF: STATS.FLAT_DEF + STATS.BASE_DEF + STATS.DEF_PERC * STATS.BASE_DEF / 100}
         stats_dict = defaultdict(int, stats_dict)
         for stat in self._stats:
             if current_dmg_type in stat.dmg_type:
                 stats_dict[stat.type] += stat.value
-            # stats_dict[stat.type, stat.dmg_type] = stats_dict.setdefault((stat.type, stat.dmg_type), 0) + stat.value
         
         for _set, count in self._sets_count.items():
             if count >= 2:
                 # TODO: function sum dict in utils.py
                 for _stat in _set.value.bonus_2_pcs:
                     # TODO: Stat object can be used instead using type and dmg_type for comparaison (__eq__ ??)
-                    # stats_dict[(_stat.type, _stat.dmg_type)] = stats_dict.setdefault((_stat.type, _stat.dmg_type), 0.) + _stat.value
                     if current_dmg_type in _stat.dmg_type:
                         stats_dict[_stat.type] += _stat.value
             if count >= 4:
                 for _stat in _set.value.bonus_4_pcs:
-                    # stats_dict[(_stat.type, _stat.dmg_type)] = stats_dict.setdefault((_stat.type, _stat.dmg_type), 0.) + _stat.value
                     if current_dmg_type in _stat.dmg_type:
                         stats_dict[_stat.type] += _stat.value
         
