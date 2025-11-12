@@ -49,12 +49,9 @@ def test_wanderer():
                   STATS.ER: 100}
     
     computed_stats = build.compute(DmgType.ALL)
-    for k, v in computed_stats.items():
-        print('   -', k, ':', v)
     for stat, real_stat_value in REAL_STATS.items():
-        print(stat)
         computed_value = computed_stats[stat]
         assert math.isclose(computed_value, real_stat_value, abs_tol=1), (f'Wrong {stat} value. '
-                                                                             f'Given: {computed_value} ; '
-                                                                             f'Expected: {real_stat_value}.')
+                                                                          f'Given: {computed_value} ; '
+                                                                          f'Expected: {real_stat_value}.')
     

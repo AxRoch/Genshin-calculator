@@ -112,14 +112,13 @@ class Calculator():
                 base_dmg = base_dmg * base_dmg_multiplier + stats[STATS.FLAT_DMG]
                 
                 dmg_bonus = 100 + stats[STATS.DMG]
-                res_mult = get_res_mult(resistances, stats[STATS.RES_SHRED])
                 dmg = defense_mult * base_dmg * dmg_bonus / 100
 
                 crit_rate = min(100, stats[STATS.CRIT_RATE]) / 100
                 final_dmg = (1 + crit_rate * stats[STATS.CRIT_DMG] / 100) * dmg
-
-                reaction_bonus = 0 # TODO
-                final_dmg = res_mult * reaction(final_dmg, stats[STATS.EM], reaction_bonus)
+                
+                res_mult = get_res_mult(resistances, stats[STATS.RES_SHRED])
+                final_dmg = res_mult * reaction(final_dmg, stats[STATS.EM], stats[STATS.REACTION_DMG_BONUS], char_lvl)
 
                 total += final_dmg
             

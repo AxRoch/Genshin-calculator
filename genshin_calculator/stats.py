@@ -269,12 +269,13 @@ class STATS(Enum):
     EM = auto()
     ER = auto()
     SPEED = auto()
+    REACTION_DMG_BONUS = auto()
+
     CRIT_DMG = auto()
     CRIT_RATE = auto()
 
     DMG = auto()
     FLAT_DMG = auto()
-    
     BASE_DMG = auto()
     BASE_DMG_MULT = auto()
 
