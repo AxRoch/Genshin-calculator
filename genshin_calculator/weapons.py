@@ -2,7 +2,8 @@ from copy import deepcopy
 from enum import Enum
 
 from .build import Build
-from .stats import STATS, DmgType, ElementType
+from .damages import DmgType, ElementType
+from .stats import STATS
     
 
 class _Weapon(Build):

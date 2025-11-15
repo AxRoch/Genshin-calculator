@@ -2,8 +2,9 @@ from dataclasses import dataclass
 from itertools import product
 from typing import Any, Iterable, List, Union
 
+from .damages import DmgType, Rotation
 from .reactions import NO_REACTIONS, Reaction
-from .stats import STATS, DmgType, Rotation
+from .stats import STATS
 
 
 def get_res_mult(resistances: Union[float, Iterable[float]], res_loss: float) -> float:

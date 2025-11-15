@@ -1,9 +1,9 @@
 import math
 
 from genshin_calculator.artifacts import ARTIFACTS
-from genshin_calculator.build import Build
 from genshin_calculator.characters import Wanderer
-from genshin_calculator.stats import DmgType, ElementType, STATS
+from genshin_calculator.damages import DmgType, ElementType
+from genshin_calculator.stats import STATS
 from genshin_calculator.weapons import CATALYST
 
 
