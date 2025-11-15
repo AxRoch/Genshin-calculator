@@ -55,10 +55,9 @@ class Build():
         """
         if len(self._artifacts_name) > 5:
             raise ValueError("A character can't have more than 5 artifacts.")
-        if self._refinement == 0 or self._constellation == 0 or self.character_level == 0:
-            raise ValueError("Character level, refinement and constellation values required"
-                             "to compute final statistics.")
-        stats_dict = {STATS.REFINEMENT: self._refinement, STATS.CONSTELLATION: self._constellation,
+        if self._refinement == 0:
+            raise ValueError("Weapon refinement required to compute final statistics.")
+        stats_dict = {STATS.REFINEMENT: self._refinement,
                       STATS.ATK: STATS.FLAT_ATK + STATS.BASE_ATK + STATS.ATK_PERC * STATS.BASE_ATK / 100,
                       STATS.HP: STATS.FLAT_HP + STATS.BASE_HP + STATS.HP_PERC * STATS.BASE_HP / 100,
                       STATS.DEF: STATS.FLAT_DEF + STATS.BASE_DEF + STATS.DEF_PERC * STATS.BASE_DEF / 100}

@@ -2,14 +2,15 @@ import math
 
 from genshin_calculator.artifacts import ARTIFACTS
 from genshin_calculator.build import Build
-from genshin_calculator.characters import WANDERER
+from genshin_calculator.characters import Wanderer
 from genshin_calculator.stats import DmgType, ElementType, STATS
 from genshin_calculator.weapons import CATALYST
 
 
 
 def test_wanderer():
-    build = WANDERER
+    wanderer = Wanderer()
+    build = wanderer.default_build
     build += CATALYST.FOUR_WINDS()
     build += ARTIFACTS.DESERT_PAVILION(STATS.FLAT_HP(4780),
                                        STATS.FLAT_ATK(19),
@@ -46,7 +47,9 @@ def test_wanderer():
                   STATS.EM: 47,
                   STATS.CRIT_RATE: 89.2,
                   STATS.CRIT_DMG: 178.3,
-                  STATS.ER: 100}
+                  STATS.ER: 100,
+                #   STATS.DMG: 61.6
+                  }
     
     computed_stats = build.compute(DmgType.ALL)
     for stat, real_stat_value in REAL_STATS.items():
