@@ -33,6 +33,12 @@ class Character():
         self._constellation = constellation
         self += Build(*stats)
         return self
+    
+    @property
+    def build(self):
+        return (self.default_build + self.weapons + self.flowers + self.feathers
+                + self.sands + self.cups + self.helmets + self.team_bonuses)
+
 
 @dataclass
 class Fischl(Character):
@@ -43,6 +49,7 @@ class Fischl(Character):
                                  STATS.BASE_DEF(593.79),
                                  STATS.ATK_PERC(24))
 
+
 @dataclass
 class Wanderer(Character):
     level: int = 90
@@ -51,7 +58,8 @@ class Wanderer(Character):
                                  STATS.BASE_ATK(327.67),
                                  STATS.BASE_DEF(607.16),
                                  STATS.CRIT_RATE(19.2))
-    
+
+ 
 @dataclass
 class Ganyu(Character):
     level: int = 90
