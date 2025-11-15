@@ -7,7 +7,6 @@ from genshin_calculator.stats import STATS
 from genshin_calculator.weapons import CATALYST
 
 
-
 def test_wanderer():
     wanderer = Wanderer(weapons=CATALYST.FOUR_WINDS(),
                         flowers=ARTIFACTS.DESERT_PAVILION(STATS.FLAT_HP(4780),
@@ -49,7 +48,7 @@ def test_wanderer():
                 #   STATS.DMG: 61.6
                   }
     
-    computed_stats = wanderer.build.compute(DmgType.ALL)
+    computed_stats = wanderer.build.compute(DmgType.ALL, ElementType.ANEMO)
     for stat, real_stat_value in REAL_STATS.items():
         computed_value = computed_stats[stat]
         assert math.isclose(computed_value, real_stat_value, abs_tol=1), (f'Wrong {stat} value. '

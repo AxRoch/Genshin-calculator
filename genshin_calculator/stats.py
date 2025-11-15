@@ -5,7 +5,7 @@ from numbers import Number
 from operator import truediv
 from typing import Dict, Type, Union
 
-from .damages import DmgType
+from .damages import DmgType, ElementType
 
 
 class _StatsOp():
@@ -127,14 +127,18 @@ class Stat():
         The value of the statistic. It can be a numerical value or an expression of other statistics.
     dmg_type : DmgType, default DmgType.ALL
         The type of damage represented.
+    element_type : ElementType, default ElementType.ALL
+        The elemental type of damage represented.
     """
 
     def __init__(self, stat_type: 'STATS',
                  value: Union[Number, _StatsOp, 'STATS'],
-                 dmg_type: DmgType = DmgType.ALL):
+                 dmg_type: DmgType = DmgType.ALL,
+                 element_type: ElementType = ElementType.ALL):
         self.type = stat_type
         self.value = value
         self.dmg_type = dmg_type
+        self.element_type = element_type
     
     def resolve(self, stat_dict: Dict['STATS', Number]) -> Number:
         """Resolve the stat expression recursively into a numeric value.
@@ -193,6 +197,8 @@ class STATS(Enum):
     BASE_DMG = auto()
     BASE_DMG_MULT = auto()
 
+    MULTIPLIER_PERC = auto()
+
     RES_SHRED = auto()
     DEF_SHRED = auto()
 
@@ -202,25 +208,34 @@ class STATS(Enum):
     REFINEMENT = auto()
 
     def __call__(self, value: Union[Number, _StatsOp, 'STATS'],
-                 *restrictions : DmgType):
+                 *restrictions : Union[DmgType, ElementType]):
         """Create a Stat instance associated with this STATS enum member.
         
         Parameters
         ----------
         value : Union[Number, _StatsOp, STATS]
             The numerical value or statistical expression associated with the statistic.
-        *restrictions : DmgType
+        *restrictions : Union[DmgType, ElementType]
             If given, this statistics will be considered only for the associated damage type in the
             rotation.
         """
         dmg_type = DmgType._ZERO
-        if len(restrictions) == 0:
-            dmg_type = DmgType.ALL
+        element_type = ElementType._ZERO
         for restriction in restrictions:
             if isinstance(restriction, DmgType):
                 dmg_type = dmg_type | restriction
+            elif isinstance(restriction, ElementType):
+                element_type = element_type | restriction
+            else:
+                raise ValueError("restrictions should be `DmgType` or `ElementType` objects.")
+        
+        # No restrictions applied
+        if dmg_type is DmgType._ZERO:
+            dmg_type = DmgType.ALL
+        if element_type is ElementType._ZERO:
+            element_type = ElementType.ALL
 
-        return Stat(self, value, dmg_type=dmg_type)
+        return Stat(self, value, dmg_type=dmg_type, element_type=element_type)
     
     def __add__(self, term: Union[Number, _StatsOp, 'STATS']) -> _StatsSum:
         if isinstance(term, (Number, STATS)):

@@ -2,7 +2,7 @@ from collections import defaultdict
 from numbers import Number
 from typing import Dict, Optional
 
-from .stats import DmgType, Stat, STATS
+from .stats import DmgType, ElementType, Stat, STATS
 
 class Build():
     """A class representing an ensemble of statistics for a character given by its own stats and the ones from weapons,
@@ -35,13 +35,15 @@ class Build():
         self._weapon_name = ""
         self.name = name
 
-    def compute(self, current_dmg_type: DmgType) -> Dict[STATS, Number]:
+    def compute(self, current_dmg_type: DmgType, current_element_type: ElementType) -> Dict[STATS, Number]:
         """Compute the final statistics for the build, given a damage type.
 
         Parameters
         ----------
         current_dmg_type : DmgType
             The damage type to compute stats for.
+        current_element_type : ElementType
+            The element type to compute stats for.
 
         Returns
         -------
@@ -63,7 +65,7 @@ class Build():
                       STATS.DEF: STATS.FLAT_DEF + STATS.BASE_DEF + STATS.DEF_PERC * STATS.BASE_DEF / 100}
         stats_dict = defaultdict(int, stats_dict)
         for stat in self._stats:
-            if current_dmg_type in stat.dmg_type:
+            if current_dmg_type in stat.dmg_type and current_element_type in stat.element_type:
                 stats_dict[stat.type] += stat.value
         
         for _set, count in self._sets_count.items():
@@ -71,11 +73,11 @@ class Build():
                 # TODO: function sum dict in utils.py
                 for _stat in _set.value.bonus_2_pcs:
                     # TODO: Stat object can be used instead using type and dmg_type for comparaison (__eq__ ??)
-                    if current_dmg_type in _stat.dmg_type:
+                    if current_dmg_type in _stat.dmg_type and current_element_type in _stat.element_type:
                         stats_dict[_stat.type] += _stat.value
             if count >= 4:
                 for _stat in _set.value.bonus_4_pcs:
-                    if current_dmg_type in _stat.dmg_type:
+                    if current_dmg_type in _stat.dmg_type and current_element_type in _stat.element_type:
                         stats_dict[_stat.type] += _stat.value
         
         to_resolve = [stat for stat in stats_dict if not isinstance(stats_dict[stat], Number)]
