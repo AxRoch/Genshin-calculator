@@ -1,4 +1,3 @@
-from copy import deepcopy
 from enum import Enum
 
 from .build import Build
@@ -22,7 +21,7 @@ class WEAPONS(Enum):
     def __init__(self, value):
         super().__init__()
         self.value._weapon_name = f'{self.name}'
-        self.value.name = f'{self.name}'
+        self.value._names = [f'{self.name}']
     
     def __call__(self, refinement=1):
         self.value._refinement = refinement
@@ -57,6 +56,13 @@ class CATALYST(WEAPONS):
     FOUR_WINDS = _Weapon(STATS.BASE_ATK(608),
                          STATS.CRIT_RATE(33.1),
                          STATS.DMG(6 + 2 * STATS.REFINEMENT, ElementType.ELEMENTAL))
+    WIDSITH = _Weapon(STATS.BASE_ATK(510),
+                       STATS.CRIT_DMG(55.1),
+                       STATS.ATK_PERC(120 / 3),
+                       STATS.DMG(96 / 3),
+                       STATS.EM(480 / 3))
+    PROTOTYPE_AMBER = _Weapon(STATS.BASE_ATK(510),
+                              STATS.HP_PERC(41.3))
 
 
 class SWORD(WEAPONS):

@@ -33,7 +33,13 @@ class Build():
         self._refinement = refinement
         self._constellation = constellation
         self._weapon_name = ""
-        self.name = name
+        self._names = []
+        if name is not None:
+            self._names.append(name)
+    
+    @property
+    def name(self):
+        return "-".join(self._names)
 
     def compute(self, current_dmg_type: DmgType, current_element_type: ElementType) -> Dict[STATS, Number]:
         """Compute the final statistics for the build, given a damage type.
@@ -102,6 +108,7 @@ class Build():
             new_build = Build(*self._stats, *other._stats,
                               refinement=self._sum_refinement(other),
                               constellation=self._sum_constellation(other))
+            new_build._names = [*self._names, *other._names]
             if self._weapon_name:
                 if other._weapon_name:
                     raise ValueError("Can't add two weapons builds.")
@@ -122,12 +129,12 @@ class Build():
             for term in (self, other):
                 for _set, count in term._sets_count.items():
                     new_build._sets_count[_set] = new_build._sets_count.setdefault(_set, 0) + count
-            
-            print("TODO: check this method (Build addition)")
 
             return new_build
+        return NotImplemented
 
     def __iadd__(self, other):
+        self._names += [*other._names]
         self._stats += [*other._stats]
         self._refinement = self._sum_refinement(other)
         self._constellation = self._sum_constellation(other)
