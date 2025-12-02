@@ -1,8 +1,9 @@
 import math
 
 from genshin_calculator.build import Build
-from genshin_calculator.characters import Character, Rotation
+from genshin_calculator.characters import Character
 from genshin_calculator.reactions import OVERLOAD, REVERSE_MELT, REVERSE_VAPORIZE
+from genshin_calculator.rotation import Rotation
 from genshin_calculator.stats import STATS, DmgType, ElementType
 
 # Examples taken from https://www.youtube.com/watch?v=ai1JgPe1ue4&list=WL&index=45
@@ -109,14 +110,14 @@ def test_chongyun():
 def test_yoimiya():
     NB_HITS = 0
     CURIOSITY_STACKS = 0
-    YUNJIN_DEF = (1 + CURIOSITY_STACKS * 0.06 + 0.2) * 689 + 1504
+    yunjin = Character(level=90, default_build=Build(STATS.DEF((1 + CURIOSITY_STACKS * 0.06 + 0.2) * 689 + 1504)))
     yoimiya = Character(level=81,
                         default_build=Build(STATS.ATK(2378),
                                             STATS.EM(117),
                                             STATS.DMG(46.6, ElementType.PYRO),
                                             STATS.DMG(50, DmgType.NORMAL | DmgType.CHARGED),
                                             STATS.DMG(NB_HITS * 2, ElementType.PYRO),
-                                            STATS.FLAT_DMG((0.61 + 0.075) * YUNJIN_DEF, DmgType.NORMAL),
+                                            STATS.FLAT_DMG((0.61 + 0.075) * yunjin[STATS.DEF], DmgType.NORMAL),
                                             STATS.DMG(15, DmgType.NORMAL),
                                             STATS.MULTIPLIER_PERC(58.8, DmgType.NORMAL),
                                             STATS.CRIT_RATE(100), STATS.CRIT_DMG(193.6)))

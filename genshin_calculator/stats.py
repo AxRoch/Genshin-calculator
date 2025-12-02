@@ -1,4 +1,4 @@
-from enum import Enum, Flag, auto
+from enum import Enum, auto
 from functools import reduce
 from math import prod
 from numbers import Number
@@ -110,7 +110,7 @@ def resolve_stat(stat_value: Union[Number, _StatsOp, 'STATS'],
         return stat_value
     if isinstance(stat_value, STATS):
         return stat_dict[stat_value]
-    if isinstance (stat_value, _StatsOp):
+    if isinstance(stat_value, _StatsOp):
         return stat_value._operation(resolve_stat(term_value, stat_dict)
                                      for term_value in stat_value.operands)
     raise NotImplementedError
@@ -194,7 +194,6 @@ class STATS(Enum):
 
     DMG = auto()
     FLAT_DMG = auto()
-    BASE_DMG = auto()
     BASE_DMG_MULT = auto()
 
     MULTIPLIER_PERC = auto()
