@@ -58,9 +58,9 @@ class CATALYST(WEAPONS):
                          STATS.DMG(6 + 2 * STATS.REFINEMENT, ElementType.ELEMENTAL))
     WIDSITH = _Weapon(STATS.BASE_ATK(510),
                        STATS.CRIT_DMG(55.1),
-                       STATS.ATK_PERC(120 / 3),
-                       STATS.DMG(96 / 3),
-                       STATS.EM(480 / 3))
+                       STATS.ATK_PERC((45 + 15 * STATS.REFINEMENT) / 3),
+                       STATS.DMG((36 + 12 * STATS.REFINEMENT) / 3),
+                       STATS.EM((180 + 60 * STATS.REFINEMENT) / 3))
     PROTOTYPE_AMBER = _Weapon(STATS.BASE_ATK(510),
                               STATS.HP_PERC(41.3))
 
