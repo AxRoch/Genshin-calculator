@@ -78,8 +78,8 @@ class Rotation():
 
             base_dmg_multiplier = (100 + stats[STATS.MULTIPLIER_PERC]) / 100
             
-            res_shred = stats[STATS.DEF_SHRED] / 100
-            defense_mult = (100 + char_lvl) / ( (1 - res_shred) * (100 + ennemy_lvl) + (100 + char_lvl) )
+            def_shred = stats[STATS.DEF_SHRED] / 100
+            defense_mult = (100 + char_lvl) / ( (1 - def_shred) * (100 + ennemy_lvl) + (100 + char_lvl) )
             
             base_dmg = attack.atk_mult * stats[STATS.ATK]
             base_dmg += attack.pv_mult * stats[STATS.HP]

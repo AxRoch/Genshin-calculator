@@ -1,10 +1,14 @@
 from dataclasses import dataclass
 from enum import Enum
+from itertools import combinations_with_replacement
 
 from .build import Build
 from .damages import DmgType, ElementType
+from .data import ARTIFACTS_IMPROVEMENTS
 from .stats import STATS
 
+
+_BEST_IMPROVEMENTS = {stat: stat(max(list_improvements)) for stat, list_improvements in ARTIFACTS_IMPROVEMENTS.items()}
 
 class ArtifactPiece(Build):
 
@@ -12,6 +16,19 @@ class ArtifactPiece(Build):
         super().__init__(*stats, name=name)
         self._sets_count[_set] = self._sets_count.setdefault(_set, 0) + 1
         self._artifacts_name.append(name)
+    
+    def improve(self, nb_improvement, stats_to_improve=None):
+        possible_stats = [stat.type for stat in self._stats]
+        if stats_to_improve is None:
+            stats_to_improve = possible_stats
+        else:
+            for stat in stats_to_improve:
+                if stat not in possible_stats:
+                    raise ValueError(f"Can't add the brand new stat {stat}")
+
+        for improvement_paths in combinations_with_replacement(stats_to_improve, nb_improvement):
+            improved_artifact = self + Build(*[_BEST_IMPROVEMENTS[stat] for stat in improvement_paths])
+            yield improved_artifact
 
 
 @dataclass
@@ -31,8 +48,8 @@ class ARTIFACTS(Enum):
     DESERT_PAVILION = Set(bonus_2_pcs={STATS.DMG(15, ElementType.ANEMO)},
                           bonus_4_pcs={STATS.SPEED(10),
                                        STATS.DMG(40, DmgType.CHARGED | DmgType.NORMAL)})
-    MARECHAUSSE_HUNTER = Set(bonus_2_pcs=STATS.DMG(15, DmgType.CHARGED | DmgType.NORMAL),
-                             bonus_4_pcs=STATS.CRIT_RATE(36))
+    MARECHAUSSE_HUNTER = Set(bonus_2_pcs={STATS.DMG(15, DmgType.CHARGED | DmgType.NORMAL)},
+                             bonus_4_pcs={STATS.CRIT_RATE(36)})
     
     def __call__(self, *stats, name=None):
         return ArtifactPiece(name, self, *stats)
