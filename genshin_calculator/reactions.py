@@ -17,7 +17,7 @@ class Reaction():
         raise NotImplementedError
 
 
-class AdditiveReaction(Reaction):
+class TransformativeReaction(Reaction):
     """Class for additive elemental reactions."""
 
     def __call__(self, dmg: float, em: float, reaction_bonus: float, char_lvl: int) -> float:
@@ -70,14 +70,14 @@ class MutltiplicativeReaction(Reaction):
         return self.multiplicator * dmg * (1 + reaction_bonus / 100 + 2.78 * em / (1400 + em))
 
 # TODO : check values
-NO_REACTIONS = AdditiveReaction(0)
+NO_REACTIONS = TransformativeReaction(0)
 
-BURNING = AdditiveReaction(0.25)
-SUPERCONDUCT = AdditiveReaction(0.5)
-SWIRL = AdditiveReaction(0.6)
-ELECTRO_CHARGED = AdditiveReaction(1.2)
-SHATTERED = AdditiveReaction(1.5)
-OVERLOAD = AdditiveReaction(2.0)
+BURNING = TransformativeReaction(0.25)
+SUPERCONDUCT = TransformativeReaction(0.5)
+SWIRL = TransformativeReaction(0.6)
+ELECTRO_CHARGED = TransformativeReaction(1.2)
+SHATTERED = TransformativeReaction(1.5)
+OVERLOAD = TransformativeReaction(2.0)
 
 FORWARD_MELT = MutltiplicativeReaction(2)
 FORWARD_VAPORIZE = MutltiplicativeReaction(2)

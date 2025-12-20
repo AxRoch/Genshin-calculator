@@ -2,7 +2,7 @@ from collections import defaultdict
 from numbers import Number
 from typing import Dict, Optional
 
-from .stats import DmgType, Stat, STATS
+from .stats import DmgType, ElementType, Stat, STATS
 
 class Build():
     """A class representing an ensemble of statistics for a character given by its own stats and the ones from weapons,
@@ -33,15 +33,23 @@ class Build():
         self._refinement = refinement
         self._constellation = constellation
         self._weapon_name = ""
-        self.name = name
+        self._names = []
+        if name is not None:
+            self._names.append(name)
+    
+    @property
+    def name(self):
+        return "-".join(self._names)
 
-    def compute(self, current_dmg_type: DmgType) -> Dict[STATS, Number]:
+    def compute(self, current_dmg_type: DmgType, current_element_type: ElementType) -> Dict[STATS, Number]:
         """Compute the final statistics for the build, given a damage type.
 
         Parameters
         ----------
         current_dmg_type : DmgType
             The damage type to compute stats for.
+        current_element_type : ElementType
+            The element type to compute stats for.
 
         Returns
         -------
@@ -55,16 +63,15 @@ class Build():
         """
         if len(self._artifacts_name) > 5:
             raise ValueError("A character can't have more than 5 artifacts.")
-        if self._refinement == 0 or self._constellation == 0 or self.character_level == 0:
-            raise ValueError("Character level, refinement and constellation values required"
-                             "to compute final statistics.")
-        stats_dict = {STATS.REFINEMENT: self._refinement, STATS.CONSTELLATION: self._constellation,
+        if self._refinement == 0:
+            raise ValueError("Weapon refinement required to compute final statistics.")
+        stats_dict = {STATS.REFINEMENT: self._refinement,
                       STATS.ATK: STATS.FLAT_ATK + STATS.BASE_ATK + STATS.ATK_PERC * STATS.BASE_ATK / 100,
                       STATS.HP: STATS.FLAT_HP + STATS.BASE_HP + STATS.HP_PERC * STATS.BASE_HP / 100,
                       STATS.DEF: STATS.FLAT_DEF + STATS.BASE_DEF + STATS.DEF_PERC * STATS.BASE_DEF / 100}
         stats_dict = defaultdict(int, stats_dict)
         for stat in self._stats:
-            if current_dmg_type in stat.dmg_type:
+            if current_dmg_type in stat.dmg_type and current_element_type in stat.element_type:
                 stats_dict[stat.type] += stat.value
         
         for _set, count in self._sets_count.items():
@@ -72,11 +79,11 @@ class Build():
                 # TODO: function sum dict in utils.py
                 for _stat in _set.value.bonus_2_pcs:
                     # TODO: Stat object can be used instead using type and dmg_type for comparaison (__eq__ ??)
-                    if current_dmg_type in _stat.dmg_type:
+                    if current_dmg_type in _stat.dmg_type and current_element_type in _stat.element_type:
                         stats_dict[_stat.type] += _stat.value
             if count >= 4:
                 for _stat in _set.value.bonus_4_pcs:
-                    if current_dmg_type in _stat.dmg_type:
+                    if current_dmg_type in _stat.dmg_type and current_element_type in _stat.element_type:
                         stats_dict[_stat.type] += _stat.value
         
         to_resolve = [stat for stat in stats_dict if not isinstance(stats_dict[stat], Number)]
@@ -101,6 +108,7 @@ class Build():
             new_build = Build(*self._stats, *other._stats,
                               refinement=self._sum_refinement(other),
                               constellation=self._sum_constellation(other))
+            new_build._names = [*self._names, *other._names]
             if self._weapon_name:
                 if other._weapon_name:
                     raise ValueError("Can't add two weapons builds.")
@@ -121,12 +129,12 @@ class Build():
             for term in (self, other):
                 for _set, count in term._sets_count.items():
                     new_build._sets_count[_set] = new_build._sets_count.setdefault(_set, 0) + count
-            
-            print("TODO: check this method (Build addition)")
 
             return new_build
+        return NotImplemented
 
     def __iadd__(self, other):
+        self._names += [*other._names]
         self._stats += [*other._stats]
         self._refinement = self._sum_refinement(other)
         self._constellation = self._sum_constellation(other)
