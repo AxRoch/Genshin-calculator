@@ -18,6 +18,20 @@ class ArtifactPiece(Build):
         self._artifacts_name.append(name)
     
     def improve(self, nb_improvement, stats_to_improve=None):
+        """Iterates over several improved version of the current artifact.
+
+        Parameters
+        ----------
+        nb_improvement : int
+            The number of improvements to apply to the artifact.
+        stats_to_improve : List[STATS], optional
+            If given, the list of statistics to improve. Else, all possible stats of the current artifact are considered.
+
+        Yields
+        ------
+        ArtifactPiece
+            A new artifact with the applied improvements.
+        """
         possible_stats = [stat.type for stat in self._stats]
         if stats_to_improve is None:
             stats_to_improve = possible_stats
@@ -52,4 +66,18 @@ class ARTIFACTS(Enum):
                              bonus_4_pcs={STATS.CRIT_RATE(36)})
     
     def __call__(self, *stats, name=None):
+        """Set the statistics of the artifact build.
+
+        Parameters
+        ----------
+        *stats : STATS
+            Stats to add to the artifact.
+        name : str, optional
+            If given, label the artifact with a name.
+
+        Returns
+        -------
+        ArtifactPiece
+            The artifact with its statistics set.
+        """
         return ArtifactPiece(name, self, *stats)

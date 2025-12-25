@@ -35,6 +35,20 @@ class Character():
     #     self._team = Team(self)
 
     def __call__(self, *stats: STATS, constellation: int = 1):
+        """Add stats to the character build and change its constellation.
+
+        Parameters
+        ----------
+        *stats : STATS
+            Stats to add to the character.
+        constellation : int, default 1
+            The constellation level to set.
+
+        Returns
+        -------
+        Character
+            The updated character build.
+        """
         self._constellation = constellation
         self += Build(*stats)
         return self

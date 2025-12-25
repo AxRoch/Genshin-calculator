@@ -1,7 +1,9 @@
 from collections import namedtuple
 from dataclasses import dataclass
 from itertools import product
-from typing import Any, Iterable, Union
+from typing import Iterable, List, Union
+
+from .build import Build
 
 
 def get_res_mult(resistances: Union[float, Iterable[float]], res_loss: float) -> float:
@@ -48,15 +50,22 @@ def get_res_mult(resistances: Union[float, Iterable[float]], res_loss: float) ->
 
 @dataclass
 class Calculator():
-    weapons: Any
-    flowers: Any
-    feathers: Any
-    sands: Any
-    cups: Any
-    helmets: Any
-    team_bonuses: Any
+    weapons: List[Build]
+    flowers: List[Build]
+    feathers: List[Build]
+    sands: List[Build]
+    cups: List[Build]
+    helmets: List[Build]
+    team_bonuses: List[Build]
 
     def __iter__(self):
+        """Iterate over all possible build combinations.
+
+        Yields
+        ------
+        namedtuple
+            A named tuple containing the build name, the selected items and the index of the latter.
+        """
         SELECTIONS_ORDER = ('team_bonuses', 'weapons', 'helmets',
                             'sands', 'cups', 'feathers', 'flowers')
         enumerate_selections_func = lambda attr_name: enumerate(self.__getattribute__(attr_name))

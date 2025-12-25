@@ -39,6 +39,7 @@ class Rotation():
         self._attacks.append(attack)
     
     def __iter__(self):
+        "Iterate over the attacks of the rotation."
         for dmg_type in self._attacks:
             yield dmg_type
     
