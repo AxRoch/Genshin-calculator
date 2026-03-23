@@ -76,9 +76,7 @@ class Build():
         
         for _set, count in self._sets_count.items():
             if count >= 2:
-                # TODO: function sum dict in utils.py
                 for _stat in _set.value.bonus_2_pcs:
-                    # TODO: Stat object can be used instead using type and dmg_type for comparaison (__eq__ ??)
                     if current_dmg_type in _stat.dmg_type and current_element_type in _stat.element_type:
                         stats_dict[_stat.type] += _stat.value
             if count >= 4:

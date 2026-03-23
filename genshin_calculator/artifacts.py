@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from enum import Enum
 from itertools import combinations_with_replacement
+from typing import List
 
 from .build import Build
 from .damages import DmgType, ElementType
-from .data import ARTIFACTS_IMPROVEMENTS
+from .data import ARTIFACTS_IMPROVEMENTS, ARTIFACTS_MAIN_STATS
 from .stats import STATS
 
 
@@ -57,6 +58,8 @@ class ARTIFACTS(Enum):
                           bonus_4_pcs={STATS.DMG(35, DmgType.CHARGED)})
     SHIMENAWA = Set(bonus_2_pcs={STATS.ATK_PERC(18), STATS.EM(0)},
                     bonus_4_pcs={STATS.DMG(50, DmgType.CHARGED | DmgType.NORMAL)})
+    GILDED_DREAM = Set(bonus_2_pcs={STATS.EM(80)},
+                       bonus_4_pcs={STATS.EM(150)})
     GOLDEN_TROUP = Set(bonus_2_pcs={STATS.DMG(20, DmgType.SKILL)},
                        bonus_4_pcs={STATS.DMG(50, DmgType.SKILL)})
     DESERT_PAVILION = Set(bonus_2_pcs={STATS.DMG(15, ElementType.ANEMO)},
@@ -64,6 +67,8 @@ class ARTIFACTS(Enum):
                                        STATS.DMG(40, DmgType.CHARGED | DmgType.NORMAL)})
     MARECHAUSSE_HUNTER = Set(bonus_2_pcs={STATS.DMG(15, DmgType.CHARGED | DmgType.NORMAL)},
                              bonus_4_pcs={STATS.CRIT_RATE(36)})
+    OBSIDIAN_CODEX = Set(bonus_2_pcs={},
+                         bonus_4_pcs={})
     
     def __call__(self, *stats, name=None):
         """Set the statistics of the artifact build.
@@ -81,3 +86,56 @@ class ARTIFACTS(Enum):
             The artifact with its statistics set.
         """
         return ArtifactPiece(name, self, *stats)
+
+
+def compute_optimal_artifacts(character,
+                              rotation,
+                              sand_main_stat,
+                              cup_main_stat,
+                              helmet_main_stat,
+                              wanted_substats: List,
+                              **rotation_kwargs):
+    base_dmg = sum(rotation.compute(**rotation_kwargs))
+
+    nb_possible_improvements = {substat: 30 - 5 * int(substat in (STATS.FLAT_ATK,
+                                                                  STATS.FLAT_HP,
+                                                                  sand_main_stat,
+                                                                  cup_main_stat,
+                                                                  helmet_main_stat)) for substat in wanted_substats}
+
+    old_base_stats = {}
+    for artifact_piece_type, main_stat in [('flower', STATS.FLAT_HP),
+                                           ('feather', STATS.FLAT_ATK),
+                                           ('sand', sand_main_stat),
+                                           ('cup', cup_main_stat),
+                                           ('helmet', helmet_main_stat)]:
+        old_base_stats[artifact_piece_type] = getattr(character, artifact_piece_type + 's')
+        setattr(character, artifact_piece_type + 's', Build(main_stat(ARTIFACTS_MAIN_STATS[main_stat])))
+    
+    for i in range(45):
+        possible_substat = [substat for substat, remaining_instance in nb_possible_improvements.items()
+                            if remaining_instance > 0]
+        best_substat = possible_substat[0]
+        character.flowers._stats.append(_BEST_IMPROVEMENTS[best_substat])
+        best_dmg = sum(rotation.compute(**rotation_kwargs))
+
+        for substat in possible_substat[1:]:
+            character.flowers._stats[i+1] = _BEST_IMPROVEMENTS[substat]
+            dmg = sum(rotation.compute(**rotation_kwargs))
+
+            if dmg > best_dmg:
+                best_dmg = dmg
+                best_substat = substat
+            
+        print(best_substat, best_dmg)
+            
+        character.flowers._stats[i+1] = _BEST_IMPROVEMENTS[best_substat]
+        nb_possible_improvements[best_substat] -= 1
+    
+    print(best_dmg / base_dmg)
+
+    # Recover old stats
+    for artifact_piece_type, artifact_build in old_base_stats.items():
+        setattr(character, artifact_piece_type + 's', artifact_build)
+
+

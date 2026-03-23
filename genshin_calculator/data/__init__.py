@@ -1,2 +1,2 @@
-from .artifacts import ARTIFACTS_IMPROVEMENTS
+from .artifacts import ARTIFACTS_IMPROVEMENTS, ARTIFACTS_MAIN_STATS
 from .transformative_reaction_multipliers import TRANSFORMATIVE_REACTION_MULTIPLIERS

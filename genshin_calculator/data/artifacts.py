@@ -10,3 +10,14 @@ ARTIFACTS_IMPROVEMENTS = {STATS.FLAT_HP: [209.13, 239.00, 268.88, 298.75],
                           STATS.ER: [4.53, 5.18, 5.83, 6.48],
                           STATS.CRIT_RATE: [2.72, 3.11, 3.50, 3.89],
                           STATS.CRIT_DMG: [5.44, 6.22, 6.99, 7.77]}
+
+ARTIFACTS_MAIN_STATS = {STATS.FLAT_HP: 4780,
+                        STATS.FLAT_ATK: 311,
+                        STATS.HP_PERC: 46.6,
+                        STATS.ATK_PERC: 46.6,
+                        STATS.DEF_PERC: 58.3,
+                        STATS.EM: 187,
+                        STATS.ER: 51.8,
+                        STATS.CRIT_RATE: 31.1,
+                        STATS.CRIT_DMG: 62.2,
+                        STATS.DMG: 46.6}
