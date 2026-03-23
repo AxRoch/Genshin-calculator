@@ -61,8 +61,20 @@ class CATALYST(WEAPONS):
                        STATS.ATK_PERC((45 + 15 * STATS.REFINEMENT) / 3),
                        STATS.DMG((36 + 12 * STATS.REFINEMENT) / 3),
                        STATS.EM((180 + 60 * STATS.REFINEMENT) / 3))
+    TULAYTULLAH_REMEMBRANCE = _Weapon(STATS.BASE_ATK(674),
+                                      STATS.CRIT_DMG(44.1),
+                                      STATS.DMG(48 * 3 / 4, DmgType.NORMAL)) # Max 48, 4.8 every second + 9.6 every NA => ~ maxé à la moitié
+    TOME_OF_THE_ETERNAL_FLOW = _Weapon(STATS.BASE_ATK(542),
+                                       STATS.CRIT_DMG(88.2),
+                                       STATS.DMG(28))
     PROTOTYPE_AMBER = _Weapon(STATS.BASE_ATK(510),
                               STATS.HP_PERC(41.3))
+
+
+class POLEARM(WEAPONS):
+    MISSIVE_WINDSPEAR = _Weapon(STATS.BASE_ATK(510),
+                                STATS.ATK_PERC(41.3 + 9 + 3 * STATS.REFINEMENT),
+                                STATS.EM(36 + 12 * STATS.REFINEMENT))
 
 
 class SWORD(WEAPONS):
