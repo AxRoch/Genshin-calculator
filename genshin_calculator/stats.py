@@ -166,6 +166,9 @@ class Stat():
                     return Stat(self.stat_type, self.value + other.value, dmg_type=self.dmg_type)
 
         return NotImplemented
+    
+    def __repr__(self):
+        return f"{self.type}({self.value})"
 
 
 class STATS(Enum):

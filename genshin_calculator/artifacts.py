@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, auto
 from itertools import combinations_with_replacement
 from typing import List
 
@@ -88,6 +88,11 @@ class ARTIFACTS(Enum):
         return ArtifactPiece(name, self, *stats)
 
 
+def _reset_artifact_substats(artifact):
+    old_substats = artifact._stats
+    artifact._stats = [old_substats[0]] # Keep only the main stat
+
+
 def compute_optimal_artifacts(character,
                               rotation,
                               sand_main_stat,
@@ -138,4 +143,11 @@ def compute_optimal_artifacts(character,
     for artifact_piece_type, artifact_build in old_base_stats.items():
         setattr(character, artifact_piece_type + 's', artifact_build)
 
+class SUPPORT_SET(Enum):
+    CINDER_CITY = [STATS.DMG(12)]
+    MILLELITH = [STATS.ATK_PERC(20)]
+    NOBLE = [STATS.ATK_PERC(20)]
 
+    @property
+    def build(self):
+        return Build(*self.value, name=self.name)

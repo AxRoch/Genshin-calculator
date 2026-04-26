@@ -1,6 +1,6 @@
 from collections import defaultdict
 from numbers import Number
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 from .stats import DmgType, ElementType, Stat, STATS
 
@@ -10,7 +10,7 @@ class Build():
     
     Parameters
     ----------
-    *stats : Stat
+    *stats : Union[Stat, SUPPORT_SET]
         Stats to include in the build.
     refinement : int, default 0
         Refinement level of the weapon.
@@ -21,25 +21,36 @@ class Build():
     """
 
     def __init__(self,
-                 *stats: Stat,
+                 *stats: Union[Stat, 'SUPPORT_SET'],
                  character_level: int = 0,
                  refinement: int = 0,
                  constellation: int = 0,
                  name: Optional[str] = None):
-        self._stats = list(stats)
+        from .artifacts import SUPPORT_SET
+        self._names = []
+        if name is not None:
+            self._names.append(name)
+        self._stats = []
+        self._support_sets = set()
+        for stat in stats:
+            if stats in self._support_sets:
+                continue
+            if isinstance(stat, SUPPORT_SET):
+                self._support_sets.add(stat)
+                continue
+
+            self._stats.append(stat)
+
         self._sets_count = {}
         self._artifacts_name = []
         self.character_level = character_level
         self._refinement = refinement
         self._constellation = constellation
-        self._weapon_name = ""
-        self._names = []
-        if name is not None:
-            self._names.append(name)
+        self._weapon_name = "" 
     
     @property
     def name(self):
-        return "-".join(self._names)
+        return "-".join(self._names + [support_set.name for support_set in self._support_sets])
 
     def compute(self, current_dmg_type: DmgType, current_element_type: ElementType) -> Dict[STATS, Number]:
         """Compute the final statistics for the build, given a damage type.
@@ -70,7 +81,7 @@ class Build():
                       STATS.HP: STATS.FLAT_HP + STATS.BASE_HP + STATS.HP_PERC * STATS.BASE_HP / 100,
                       STATS.DEF: STATS.FLAT_DEF + STATS.BASE_DEF + STATS.DEF_PERC * STATS.BASE_DEF / 100}
         stats_dict = defaultdict(int, stats_dict)
-        for stat in self._stats:
+        for stat in self._stats + [stat for support_set in self._support_sets for stat in support_set.value]:
             if current_dmg_type in stat.dmg_type and current_element_type in stat.element_type:
                 stats_dict[stat.type] += stat.value
         
@@ -104,6 +115,7 @@ class Build():
     def __add__(self, other):
         if isinstance(other, Build):
             new_build = Build(*self._stats, *other._stats,
+                              *self._support_sets, *other._support_sets,
                               refinement=self._sum_refinement(other),
                               constellation=self._sum_constellation(other))
             new_build._names = [*self._names, *other._names]
@@ -134,6 +146,7 @@ class Build():
     def __iadd__(self, other):
         self._names += [*other._names]
         self._stats += [*other._stats]
+        self._support_sets.update(other._support_sets)
         self._refinement = self._sum_refinement(other)
         self._constellation = self._sum_constellation(other)
         self._weapon_name += other._weapon_name
@@ -142,3 +155,9 @@ class Build():
             self._sets_count[_set] = self._sets_count.setdefault(_set, 0) + count
         
         return self
+
+    def __repr__(self):
+        raw_build = f"Build({self._stats})"
+        if self.name:
+            return f"{self.name}-Build({self._stats})"
+        return raw_build
